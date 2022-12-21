@@ -1,3 +1,35 @@
 from django.shortcuts import render
+from rest_framework import mixins
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from applications.product.models import Product, Category
+from applications.product.serializers import ProductSerializer, CategorySerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 
-# Create your views here.
+
+class ProductAPIView(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['category', 'owner']
+    search_fields = ['title', 'description']
+    ordering_fields = ['id']
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset
+
+
+class CategoryAPIView(mixins.CreateModelMixin,
+                      mixins.RetrieveModelMixin,
+                      mixins.DestroyModelMixin,
+                      mixins.ListModelMixin,
+                      GenericViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]

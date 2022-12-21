@@ -42,13 +42,15 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
+    'django_filters',
 
 
     #app
     'applications.account',
     'applications.order',
     'applications.product',
-    'applications.spam'
+    'applications.spam',
+    'applications.feedback'
 
 ]
 

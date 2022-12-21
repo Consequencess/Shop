@@ -21,8 +21,6 @@ class RegisterAPIView(APIView):
         return Response('Вы успешно зарегистрировались. \n Вам отправлено письмо с активацией', status=201)
 
 
-
-
 class ChengePasswordApiView(APIView):
     permission_classes = [IsAuthenticated]
 
