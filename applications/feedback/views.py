@@ -1,9 +1,10 @@
-from django.shortcuts import render
+
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
 from rest_framework.viewsets import ModelViewSet
 
-from applications.feedback.models import Comment, Favorite
-from applications.feedback.serializers import CommentSerializer, FavoriteSerializer
+from applications.feedback.models import Comment, Favorite, Like
+from applications.feedback.serializers import CommentSerializer, FavoriteSerializer, LikeSerializer
 
 
 class CommentAPIView(ModelViewSet):
@@ -22,6 +23,5 @@ class FavoriteAPIView(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-
 
 

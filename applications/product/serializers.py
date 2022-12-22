@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from applications.feedback.serializers import LikeSerializer, FavoriteSerializer, RatingSerializer
 from applications.product.models import Category, Product, Image
 
 
@@ -25,6 +25,8 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     owner = serializers.EmailField(required=False)
     images = ProductImageSerializer(many=True, read_only=True)
+    likes = LikeSerializer(many=True, read_only=True)
+    ratings = RatingSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
@@ -40,6 +42,12 @@ class ProductSerializer(serializers.ModelSerializer):
         Image.objects.bulk_create(list_images)
         print(list_images)
         return product
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['likes'] = instance.likes.filter(like=True).count()
+        rep['ratings'] = instance.ratings.filter(rating=True).count()
+        return rep
 
 
 

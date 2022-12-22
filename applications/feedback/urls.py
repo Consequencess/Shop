@@ -7,6 +7,7 @@ router = DefaultRouter()
 router.register('comment', CommentAPIView)
 router.register('favorite', FavoriteAPIView)
 
+
 urlpatterns = [
     path('', include(router.urls))
 ]
